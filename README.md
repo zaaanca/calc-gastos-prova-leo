@@ -1,6 +1,6 @@
-## Controle de Gastos
+# Controle de Gastos
 
-#Funções Principais:
+## Funções Principais:
 - Adição de itens com (descrição, categoria e valor)
 - Listagem de todos os itens adicionados
 - Botões para editar e excluir os itens da lista
