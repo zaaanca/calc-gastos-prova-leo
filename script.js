@@ -1,46 +1,105 @@
-let lista = [];
-let contadorlista = 0;
+document.addEventListener('DOMContentLoaded', function() {
+    const formulario = document.querySelector('#cgastos form');
+    const listaGastos = document.createElement('ul');
+    document.querySelector('#cgastos').appendChild(listaGastos);
 
-function adicionarAlista(descricao, categoria, valor) {
-    lista.push({ descricao, categoria, valor });
-    contadorlista++;
-    atualizarlista();
-    localStorage.setItem('lista', JSON.stringify(lista));
-}
+    const totalGastosDiv = document.createElement('div');
+    totalGastosDiv.id = 'total-gastos';
+    totalGastosDiv.textContent = 'Total: R$ 0.00';
+    document.querySelector('#cgastos').appendChild(totalGastosDiv);
 
-function removerDolista(index) {
-    lista.splice(index, 1);
-    contadorlista--;
-    atualizarlista();
-    localStorage.setItem('lista', JSON.stringify(lista));
-}
+    let itemParaEdicao = null;
 
-function atualizarlista() {
-    const contador = document.getElementById('lista-contador');
-    contador.textContent = contadorlista;
+    function atualizarTotalGastos() {
+        let total = 0;
+        const valoresGastos = listaGastos.querySelectorAll('.valor-gasto');
+        valoresGastos.forEach(valorElement => {
+            total += parseFloat(valorElement.textContent);
+        });
+        totalGastosDiv.textContent = `Total: R$ ${total.toFixed(2)}`;
+    }
 
-    const lista = document.getElementById('lista');
-    const total = document.getElementById('lista-total');
-    listaLista.innerHTML = '';
-    let totalValor = 0;
+    function adicionarGasto(descricao, categoria, valor) {
+        const novoItemLista = document.createElement('li');
+        novoItemLista.innerHTML = `
+            <span>Descrição: ${descricao}, Categoria: ${categoria}, Valor: R$ <span class="valor-gasto">${valor.toFixed(2)}</span></span>
+            <div class="acoes">
+                <button class="editar">Editar</button>
+                <button class="excluir">Excluir</button>
+            </div>
+        `;
 
-    lista.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.textContent = `${item.nome} - R$ ${item.preco.toFixed(2)}`;
-        const botaoRemover = document.createElement('button');
-        botaoRemover.textContent = 'Remover';
-        botaoRemover.onclick = () => removerDolista(index);
-        li.appendChild(botaoRemover);
-        listaLista.appendChild(li);
-        totalValor += item.preco;
+        if (valor > 100) {
+            novoItemLista.querySelector('.valor-gasto').classList.add('alto-valor');
+        }
+
+        listaGastos.appendChild(novoItemLista);
+        atualizarTotalGastos();
+
+        const botaoExcluir = novoItemLista.querySelector('.excluir');
+        botaoExcluir.addEventListener('click', function() {
+            listaGastos.removeChild(this.parentNode.parentNode);
+            atualizarTotalGastos();
+        });
+
+        const botaoEditar = novoItemLista.querySelector('.editar');
+        botaoEditar.addEventListener('click', function() {
+            document.getElementById('descricao').value = descricao;
+            document.getElementById('categoria').value = categoria;
+            document.getElementById('valor').value = valor;
+
+            itemParaEdicao = novoItemLista;
+            const botaoCadastrar = formulario.querySelector('button[type="submit"]');
+            botaoCadastrar.textContent = 'Salvar Edição';
+        });
+    }
+
+    formulario.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const descricao = document.getElementById('descricao').value;
+        const categoria = document.getElementById('categoria').value;
+        const valor = parseFloat(document.getElementById('valor').value);
+
+        if (descricao && categoria && !isNaN(valor)) {
+            if (itemParaEdicao) {
+                itemParaEdicao.innerHTML = `
+                    <span>Descrição: ${descricao}, Categoria: ${categoria}, Valor: R$ <span class="valor-gasto">${valor.toFixed(2)}</span></span>
+                    <div class="acoes">
+                        <button class="editar">Editar</button>
+                        <button class="excluir">Excluir</button>
+                    </div>
+                `;
+                if (valor > 100) {
+                    itemParaEdicao.querySelector('.valor-gasto').classList.add('alto-valor');
+                } else {
+                    itemParaEdicao.querySelector('.valor-gasto').classList.remove('alto-valor');
+                }
+
+                const novoBotaoExcluir = itemParaEdicao.querySelector('.excluir');
+                novoBotaoExcluir.addEventListener('click', function() {
+                    listaGastos.removeChild(this.parentNode.parentNode);
+                    atualizarTotalGastos();
+                });
+
+                const novoBotaoEditar = itemParaEdicao.querySelector('.editar');
+                novoBotaoEditar.addEventListener('click', function() {
+                    document.getElementById('descricao').value = descricao;
+                    document.getElementById('categoria').value = categoria;
+                    document.getElementById('valor').value = valor;
+                    itemParaEdicao = itemParaEdicao;
+                    const botaoCadastrar = formulario.querySelector('button[type="submit"]');
+                    botaoCadastrar.textContent = 'Salvar Edição';
+                });
+
+                formulario.querySelector('button[type="submit"]').textContent = 'Cadastrar';
+                itemParaEdicao = null;
+            } else {
+                adicionarGasto(descricao, categoria, valor);
+            }
+            formulario.reset();
+        } else {
+            alert('Por favor, preencha todos os campos corretamente.');
+        }
     });
-
-    total.textContent = `Total: R$ ${totalValor.toFixed(2)}`;
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const listaSalvo = JSON.parse(localStorage.getItem('lista')) || [];
-    lista = listaSalvo;
-    contadorlista = lista.length;
-    atualizarlista();
 });

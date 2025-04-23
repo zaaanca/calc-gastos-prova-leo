@@ -58,3 +58,19 @@ button {
 button:hover {
     background-color: #00aeff;
 }
+
+.alto-valor {
+    color: red;
+    font-weight: bold;
+}
+
+.acoes {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.acoes button {
+    margin-left: 5px;
+    margin-top: 10px;
+    cursor: pointer;
+}
