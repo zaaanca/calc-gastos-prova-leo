@@ -3,15 +3,19 @@ const lista = document.getElementById("listaGastos");
 const totalSpan = document.getElementById("total");
 const erroMsg = document.getElementById("erro");
 
+const inputDescricao = document.getElementById("descricao");
+const inputCategoria = document.getElementById("categoria");
+const inputValor = document.getElementById("valor");
+
 let gastos = [];
 let editIndex = null;
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  
-  const descricao = form.descricao.value.trim();
-  const categoria = form.categoria.value.trim();
-  const valor = parseFloat(form.valor.value.trim());
+
+  const descricao = inputDescricao.value.trim();
+  const categoria = inputCategoria.value.trim();
+  const valor = parseFloat(inputValor.value.trim());
 
   if (!descricao || !categoria || isNaN(valor)) {
     erroMsg.textContent = "Preencha todos os campos corretamente!";
@@ -21,11 +25,13 @@ form.addEventListener("submit", (e) => {
 
   erroMsg.style.display = "none";
 
+  const novoGasto = { descricao, categoria, valor };
+
   if (editIndex !== null) {
-    gastos[editIndex] = { descricao, categoria, valor };
+    gastos[editIndex] = novoGasto;
     editIndex = null;
   } else {
-    gastos.push({ descricao, categoria, valor });
+    gastos.push(novoGasto);
   }
 
   form.reset();
@@ -58,9 +64,9 @@ function renderizarLista() {
 
 function editarGasto(index) {
   const item = gastos[index];
-  form.descricao.value = item.descricao;
-  form.categoria.value = item.categoria;
-  form.valor.value = item.valor;
+  inputDescricao.value = item.descricao;
+  inputCategoria.value = item.categoria;
+  inputValor.value = item.valor;
   editIndex = index;
 }
 
