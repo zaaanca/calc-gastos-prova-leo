@@ -1,77 +1,73 @@
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 150px;
-    padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f9f9f9;
+  color: #333;
 }
 
-header {
-    background-color: #00aeff;
-    color: white;
-    padding: 20px;
-    text-align: center;
+main {
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 0 10px #ccc;
+  border-radius: 8px;
 }
 
-header h1 {
-    margin: 0;
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-#cadastro-itens form {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-.form-group textarea {
-    resize: vertical;
+input, button {
+  padding: 10px;
+  font-size: 1rem;
 }
 
 button {
-    background-color: #00a2ec;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 button:hover {
-    background-color: #00aeff;
+  background-color: #0056b3;
 }
 
-.alto-valor {
-    color: red;
-    font-weight: bold;
+ul {
+  list-style: none;
+  padding: 0;
 }
 
-.acoes {
-    display: inline-block;
-    margin-left: 10px;
+li {
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.acoes button {
-    background-color: green;
-    margin-left: 5px;
-    margin-top: 10px;
-    cursor: pointer;
+.valor-alto {
+  color: red;
+  font-weight: bold;
+}
+
+.erro {
+  color: red;
+  font-size: 0.9rem;
+  display: none;
+}
+
+@media (max-width: 600px) {
+  main {
+    padding: 10px;
+  }
+
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
