@@ -1,12 +1,39 @@
-# Controle de Gastos
+# Controle de Gastos Pessoais
 
-## Funções Principais:
-- Adição de itens com (descrição, categoria e valor)
-- Listagem de todos os itens adicionados
-- Botões para editar e excluir os itens da lista
-- Destaque para valores altos (Valores acima de R$100 aparecem em vermelho)
-- Exibição da soma dos valores de todos os itens da lista
+Este projeto é uma aplicação web simples para controle de despesas pessoais, desenvolvida com **HTML**, **CSS** e **JavaScript puro**.
 
-Autor: Eduardo Stocchero Zancanaro 3°SEM ADS Unicesumar
+## Funcionalidades
 
-Prova do Professor: Leonardo Rocha
+- Adicionar novos gastos com descrição, categoria e valor.  
+- Editar e excluir despesas já cadastradas.  
+- Validação de campos obrigatórios.  
+- Cálculo automático do total de gastos.  
+- Destaque em vermelho para valores acima de R$ 100.  
+- Interface simples, moderna e responsiva.  
+
+## Tecnologias Utilizadas
+
+- HTML5  
+- CSS3  
+- JavaScript (sem frameworks)  
+
+## Estrutura do Projeto
+
+- index.html → Estrutura da aplicação  
+- style.css → Estilização visual  
+- script.js → Funcionalidade e lógica  
+
+## Melhorias Futuras
+
+- Armazenamento no LocalStorage para manter dados salvos.  
+- Filtros por categoria e faixa de valor.  
+- Exportação de relatórios (PDF ou CSV).  
+- Gráficos de análise de gastos.  
+
+## Licença
+
+Este projeto está sob a licença MIT. Sinta-se livre para usar, modificar e compartilhar!
+
+---
+
+**Desenvolvido por Zanca**
