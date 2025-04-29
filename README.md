@@ -23,17 +23,4 @@ Este projeto é uma aplicação web simples para controle de despesas pessoais, 
 - style.css → Estilização visual  
 - script.js → Funcionalidade e lógica  
 
-## Melhorias Futuras
-
-- Armazenamento no LocalStorage para manter dados salvos.  
-- Filtros por categoria e faixa de valor.  
-- Exportação de relatórios (PDF ou CSV).  
-- Gráficos de análise de gastos.  
-
-## Licença
-
-Este projeto está sob a licença MIT. Sinta-se livre para usar, modificar e compartilhar!
-
----
-
 **Desenvolvido por Zanca**
