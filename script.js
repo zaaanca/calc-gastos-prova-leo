@@ -1,105 +1,70 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const formulario = document.querySelector('#cgastos form');
-    const listaGastos = document.createElement('ul');
-    document.querySelector('#cgastos').appendChild(listaGastos);
+const form = document.getElementById("formGasto");
+const lista = document.getElementById("listaGastos");
+const totalSpan = document.getElementById("total");
+const erroMsg = document.getElementById("erro");
 
-    const totalGastosDiv = document.createElement('div');
-    totalGastosDiv.id = 'total-gastos';
-    totalGastosDiv.textContent = 'Total: R$ 0.00';
-    document.querySelector('#cgastos').appendChild(totalGastosDiv);
+let gastos = [];
+let editIndex = null;
 
-    let itemParaEdicao = null;
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  
+  const descricao = form.descricao.value.trim();
+  const categoria = form.categoria.value.trim();
+  const valor = parseFloat(form.valor.value.trim());
 
-    function atualizarTotalGastos() {
-        let total = 0;
-        const valoresGastos = listaGastos.querySelectorAll('.valor-gasto');
-        valoresGastos.forEach(valorElement => {
-            total += parseFloat(valorElement.textContent);
-        });
-        totalGastosDiv.textContent = `Total: R$ ${total.toFixed(2)}`;
-    }
+  if (!descricao || !categoria || isNaN(valor)) {
+    erroMsg.textContent = "Preencha todos os campos corretamente!";
+    erroMsg.style.display = "block";
+    return;
+  }
 
-    function adicionarGasto(descricao, categoria, valor) {
-        const novoItemLista = document.createElement('li');
-        novoItemLista.innerHTML = `
-            <span>Descrição: ${descricao}, Categoria: ${categoria}, Valor: R$ <span class="valor-gasto">${valor.toFixed(2)}</span></span>
-            <div class="acoes">
-                <button class="editar">Editar</button>
-                <button class="excluir">Excluir</button>
-            </div>
-        `;
+  erroMsg.style.display = "none";
 
-        if (valor > 100) {
-            novoItemLista.querySelector('.valor-gasto').classList.add('alto-valor');
-        }
+  if (editIndex !== null) {
+    gastos[editIndex] = { descricao, categoria, valor };
+    editIndex = null;
+  } else {
+    gastos.push({ descricao, categoria, valor });
+  }
 
-        listaGastos.appendChild(novoItemLista);
-        atualizarTotalGastos();
-
-        const botaoExcluir = novoItemLista.querySelector('.excluir');
-        botaoExcluir.addEventListener('click', function() {
-            listaGastos.removeChild(this.parentNode.parentNode);
-            atualizarTotalGastos();
-        });
-
-        const botaoEditar = novoItemLista.querySelector('.editar');
-        botaoEditar.addEventListener('click', function() {
-            document.getElementById('descricao').value = descricao;
-            document.getElementById('categoria').value = categoria;
-            document.getElementById('valor').value = valor;
-
-            itemParaEdicao = novoItemLista;
-            const botaoCadastrar = formulario.querySelector('button[type="submit"]');
-            botaoCadastrar.textContent = 'Salvar Edição';
-        });
-    }
-
-    formulario.addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const descricao = document.getElementById('descricao').value;
-        const categoria = document.getElementById('categoria').value;
-        const valor = parseFloat(document.getElementById('valor').value);
-
-        if (descricao && categoria && !isNaN(valor)) {
-            if (itemParaEdicao) {
-                itemParaEdicao.innerHTML = `
-                    <span>Descrição: ${descricao}, Categoria: ${categoria}, Valor: R$ <span class="valor-gasto">${valor.toFixed(2)}</span></span>
-                    <div class="acoes">
-                        <button class="editar">Editar</button>
-                        <button class="excluir">Excluir</button>
-                    </div>
-                `;
-                if (valor > 100) {
-                    itemParaEdicao.querySelector('.valor-gasto').classList.add('alto-valor');
-                } else {
-                    itemParaEdicao.querySelector('.valor-gasto').classList.remove('alto-valor');
-                }
-
-                const novoBotaoExcluir = itemParaEdicao.querySelector('.excluir');
-                novoBotaoExcluir.addEventListener('click', function() {
-                    listaGastos.removeChild(this.parentNode.parentNode);
-                    atualizarTotalGastos();
-                });
-
-                const novoBotaoEditar = itemParaEdicao.querySelector('.editar');
-                novoBotaoEditar.addEventListener('click', function() {
-                    document.getElementById('descricao').value = descricao;
-                    document.getElementById('categoria').value = categoria;
-                    document.getElementById('valor').value = valor;
-                    itemParaEdicao = itemParaEdicao;
-                    const botaoCadastrar = formulario.querySelector('button[type="submit"]');
-                    botaoCadastrar.textContent = 'Salvar Edição';
-                });
-
-                formulario.querySelector('button[type="submit"]').textContent = 'Cadastrar';
-                itemParaEdicao = null;
-            } else {
-                adicionarGasto(descricao, categoria, valor);
-            }
-            formulario.reset();
-        } else {
-            alert('Por favor, preencha todos os campos corretamente.');
-        }
-    });
+  form.reset();
+  renderizarLista();
 });
+
+function renderizarLista() {
+  lista.innerHTML = "";
+  let total = 0;
+
+  gastos.forEach((item, index) => {
+    total += item.valor;
+
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <span>${item.descricao} (${item.categoria}) - 
+        <span class="${item.valor > 100 ? 'valor-alto' : ''}">R$ ${item.valor.toFixed(2)}</span>
+      </span>
+      <span>
+        <button onclick="editarGasto(${index})">Editar</button>
+        <button onclick="removerGasto(${index})">Excluir</button>
+      </span>
+    `;
+
+    lista.appendChild(li);
+  });
+
+  totalSpan.textContent = total.toFixed(2);
+}
+
+function editarGasto(index) {
+  const item = gastos[index];
+  form.descricao.value = item.descricao;
+  form.categoria.value = item.categoria;
+  form.valor.value = item.valor;
+  editIndex = index;
+}
+
+function removerGasto(index) {
+  gastos.splice(index, 1);
+  renderizarLista();
+}
